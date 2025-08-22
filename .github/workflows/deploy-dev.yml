@@ -1,0 +1,39 @@
+name: "Deploy to DEV"
+
+on:
+  workflow_dispatch:
+    inputs:
+      PlanOK:
+        description: 'Terraform plan looks OK'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  deploy-api:
+    name: deploy-api
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name : Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.7
+          terraform_wrapper: false
+
+      - name: Terraform apply
+        id: apply
+        run: |
+          echo "Plan OK is: ${{inputs.PlanOK}}
+          if echo ${{inputs.PlanOK}} | grep -c true; 
+          then
+            echo "Plan is OK, applying changes"
+            terraform apply -auto-approve
+          else
+            echo "Plan is not OK, skipping apply"
+          fi
