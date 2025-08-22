@@ -29,7 +29,7 @@ jobs:
       - name: Terraform apply
         id: apply
         run: |
-          echo "Plan OK is: ${{inputs.PlanOK}}
+          echo "Plan OK is: ${{inputs.PlanOK}}"
           if echo ${{inputs.PlanOK}} | grep -c true; 
           then
             echo "Plan is OK, applying changes"
